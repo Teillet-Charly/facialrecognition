@@ -1,0 +1,82 @@
+\documentclass[11pt,english,fleqn,openany,letterpaper,pagesize]{scrbook}
+
+\usepackage[utf8]{inputenc}
+\usepackage[francais]{babel}
+\usepackage{fancyhdr}
+\usepackage{epic}
+\usepackage{eepic}
+\usepackage{amsmath}
+\usepackage{threeparttable}
+\usepackage{amscd}
+\usepackage{here}
+\usepackage{graphicx}
+\usepackage{lscape}
+\usepackage{tabularx}
+\usepackage{subfigure}
+\usepackage{longtable}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{csquotes}
+\usepackage[shortlabels]{enumitem}
+\usepackage[bottom]{footmisc}
+\usepackage[noend]{algpseudocode}
+\usepackage[francais,Algorithm]{algorithm}
+\usepackage{fancyhdr}
+\selectlanguage{french} 
+%\usepackage[backend=biber,style=stylename,]{biblatex}
+\fancyhf{}% Clear all headers/footers
+
+\usepackage{comment}
+\usepackage{blindtext}
+
+\usepackage{color}   %May be necessary if you want to color links
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true, %set true if you want colored links
+    linktoc=all,     %set to all if you want both sections and subsections linked
+    linkcolor=black,  %choose some color if you want links to stand out
+    citecolor=black,
+    urlcolor=black,
+}
+
+\fancyhead[L]{\scriptsize \rightmark}
+%\fancyfoot[C]{\thepage}
+\pagestyle{fancy}
+\thispagestyle{plain}
+
+ 
+\fancyhf{}
+\rhead{\scriptsize Cesi}
+\lhead{\scriptsize Projet Cobotique}
+%\fancyfoot[LE,RO]{\leftmark}
+%\fancyfoot[LE,RO]{\thepage}
+\rfoot{\scriptsize Teillet Charly}
+
+\lfoot{\thepage \includegraphics[width=2.5cm]{Figures/Cesi_Logo.jpg}}
+
+
+\geometry{
+ a4paper,
+ total={210mm,297mm},
+ left=30mm,
+ right=30mm,		
+ top=30mm,
+ bottom=25mm,
+ }
+
+
+\begin{document}
+ \input{page_de_titre}
+ \newpage
+\tableofcontents % Print the table of contents
+%\newpage
+\listoffigures % Print the list of figures
+%\newpage
+
+\newpage
+
+\chapter{Introduction}
+    \label{Introduction}
+\input{Introduction}
+
+\end{document}

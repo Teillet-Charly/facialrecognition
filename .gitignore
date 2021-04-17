@@ -102,3 +102,16 @@ dist
 
 # TernJS port file
 .tern-port
+
+#Fichier temporaire Latex
+Logbook/*.glo
+Logbook/*.fls
+Logbook/*.fdb_latexmk
+Logbook/*.aux
+Logbook/*.acn
+Logbook/*.log
+Logbook/*.ist
+Logbook/*.gz
+Logbook/*.lof
+Logbook/*.out
+Logbook/*.toc
