@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Display Webcam Stream</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+</head>
+ 
+<body>
+
+    <div id="container">
+        <canvas id="overlay"></canvas>
+        <video onplay="onPlay(this)" id="videoElement" autoplay></video>
+    </div>
+
+    <script  src="dist/face-api.min.js" ></script>
+    <script  src="dist/jquery.min.js" ></script>
+    <script  src="scripts/getVideo.js" ></script>
+    
+</body>
+
+</html>
