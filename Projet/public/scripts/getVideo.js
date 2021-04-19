@@ -2,7 +2,8 @@ $(document).ready(function(){
   getVideo();
 });
 
-var video = document.querySelector("#videoElement");
+const video = document.querySelector("#videoElement");
+const canvas = document.getElementById('overlay');
 
 async function getVideo(){
   await faceapi.loadSsdMobilenetv1Model('/models');
@@ -20,13 +21,10 @@ async function getVideo(){
     }
 }
 
-async function onPlay(){
-  const detection = await faceapi
-    .detectSingleFace(video)
-    .withFaceLandmarks();
+async function checkReco(){
+  const detection = await faceapi.detectSingleFace(video).withFaceLandmarks();
 
   const displaySize = {width: video.videoWidth, height: video.videoHeight};
-  const canvas = document.getElementById('overlay');
   faceapi.matchDimensions(canvas, displaySize);
 
   if(detection){
@@ -34,8 +32,45 @@ async function onPlay(){
     faceapi.draw.drawDetections(canvas, resizedDetections);
     faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
   };
-
-  setTimeout(() => onPlay(), 150)
+  setTimeout(() => checkReco(), 150);
 };
 
+
+async function faceRecognition(label){
+  // fetch image data from urls and convert blob to HTMLImage element
+  const imgUrl = `/images/${label}.png`;
+  const img = await faceapi.fetchImage(imgUrl);
+
+  // detect the face with the highest score in the image and compute it's landmarks and face descriptor
+  const imgReco = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor();
+  
+  const displaySize = {width: video.videoWidth, height: video.videoHeight};
+  const canvas = document.getElementById('overlay');
+  faceapi.matchDimensions(canvas, displaySize);
+  
+  
+  
+  if (imgReco) {
+    const labeledFaceDescriptors = new faceapi.LabeledFaceDescriptors(label, [imgReco.descriptor]);
+    const videoReco = await faceapi.detectSingleFace(video).withFaceLandmarks().withFaceDescriptor();
+    
+    if(videoReco){
+      const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors);
+      const bestMatch = faceMatcher.findBestMatch(videoReco.descriptor);
+      
+      const drawBox = new faceapi.draw.DrawBox(videoReco.detection.box, { label: bestMatch.toString() })
+      drawBox.draw(canvas)
+
+      console.log('Reconnaissace : ' + bestMatch.toString());
+
+    }else{
+      console.log(`no faces detected on video for ${label}`);
+    };
+
+  }else{
+    console.log(`no faces detected on image for ${label}`);
+  };
+
+  setTimeout(() => faceRecognition(label), 300);
+}
 
