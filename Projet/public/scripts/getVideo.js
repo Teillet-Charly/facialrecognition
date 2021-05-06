@@ -21,6 +21,7 @@ async function getVideo(){
     }
 }
 
+//Test function wich search a face and compute it landmarks
 async function checkReco(){
   const detection = await faceapi.detectSingleFace(video).withFaceLandmarks();
 
@@ -35,40 +36,31 @@ async function checkReco(){
   setTimeout(() => checkReco(), 150);
 };
 
-
+//Function used to recognise a person via facial recognition
 async function faceRecognition(label){
   // fetch image data from urls and convert blob to HTMLImage element
   const imgUrl = `/images/${label}.png`;
   const img = await faceapi.fetchImage(imgUrl);
 
-  // detect the face with the highest score in the image and compute it's landmarks and face descriptor
-  const imgReco = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor();
-  
+  //set the overlay
   const displaySize = {width: video.videoWidth, height: video.videoHeight};
-  const canvas = document.getElementById('overlay');
-  faceapi.matchDimensions(canvas, displaySize);
-  
-  
-  
-  if (imgReco) {
-    const labeledFaceDescriptors = new faceapi.LabeledFaceDescriptors(label, [imgReco.descriptor]);
-    const videoReco = await faceapi.detectSingleFace(video).withFaceLandmarks().withFaceDescriptor();
+  faceapi.matchDimensions(canvas, displaySize); 
+
+  const imgReco = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor();   // detect face in the image
+  const videoReco = await faceapi.detectSingleFace(video).withFaceLandmarks().withFaceDescriptor(); //detect face in the video
+
+  if (imgReco && videoReco) {
+    const labeledFaceDescriptors = new faceapi.LabeledFaceDescriptors(label, [imgReco.descriptor]); //creation of labeled reference descriptors
+    const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors); // initiate face matcher with information from image
     
-    if(videoReco){
-      const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors);
-      const bestMatch = faceMatcher.findBestMatch(videoReco.descriptor);
+    const bestMatch = faceMatcher.findBestMatch(videoReco.descriptor);
       
-      const drawBox = new faceapi.draw.DrawBox(videoReco.detection.box, { label: bestMatch.toString() })
-      drawBox.draw(canvas)
+    const drawBox = new faceapi.draw.DrawBox(videoReco.detection.box, { label: bestMatch.toString() })
+    drawBox.draw(canvas)
 
-      console.log('Reconnaissace : ' + bestMatch.toString());
-
-    }else{
-      console.log(`no faces detected on video for ${label}`);
-    };
-
+    console.log('Reconnaissance : ' + bestMatch.toString());
   }else{
-    console.log(`no faces detected on image for ${label}`);
+    console.log(`no faces detected on video`);
   };
 
   setTimeout(() => faceRecognition(label), 300);
